@@ -1,0 +1,5 @@
+nermin_user:
+    resource: "@NerminUserBundle/Controller"
+    type:     annotation
+    prefix:   /
+

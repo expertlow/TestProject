@@ -1,0 +1,17 @@
+{% block form_row -%}
+    <div class="form-group">
+        {{- form_label(form) -}}
+        {{- form_errors(form) -}}
+        {{- form_widget(form) -}}
+    </div>
+{%- endblock %}
+
+
+{% block form_widget -%}
+    {% if compound %}
+        {{- block('form_widget_compound') -}}
+    {% else %}
+        {%- set attr = attr|merge({'class': 'form-control' }) -%}
+        {{- block('form_widget_simple') -}}
+    {% endif %}
+{%- endblock %}

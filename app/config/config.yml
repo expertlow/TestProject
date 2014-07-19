@@ -26,6 +26,9 @@ framework:
 
 # Twig Configuration
 twig:
+    form:
+        resources:
+            - '::fields.html.twig'
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
 
