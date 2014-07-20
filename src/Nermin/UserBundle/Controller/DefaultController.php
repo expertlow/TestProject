@@ -13,6 +13,9 @@ use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Component\Security\Core\SecurityContext;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 
 class DefaultController extends Controller
 {
@@ -22,7 +25,20 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-        return new Response('<body>Velkom</body>');
+       // return new Response('<body>Velkom</body>');
+        return $this->render('NerminUserBundle:Default:index.html.twig');
+    }
+    /**
+     * @Method("GET")
+     * @Route("/users")
+     * @Template()
+     */
+    public function usersAction() {
+        $users = $this->getDoctrine()->getRepository('NerminUserBundle:User')->findAll();
+
+        return array(
+            'users' => $users,
+        );
     }
 
     /**
@@ -31,6 +47,9 @@ class DefaultController extends Controller
      */
     public function registerAction(Request $request)
     {
+        if( $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
+            return $this->redirect($this->generateUrl('home'));
+        }
         $form = $this->getRegisterForm();
         $form->handleRequest($request);
 
@@ -73,6 +92,7 @@ class DefaultController extends Controller
 
     private function getRegisterForm()
     {
+
         $builder = $this->createFormBuilder(null, array(
             'action' => $this->generateUrl('register'),
             'attr' => array(
@@ -106,11 +126,11 @@ class DefaultController extends Controller
      * @Method("GET")
      * @Route("/upload")
      */
-    public function uploadAction()
+    public function uploadAction(Request $request)
     {
-        return new Response('<body>Upload content</body>');
-    }
 
+
+    }
     /**
      * @Method("POST")
      * @Route("/login_check", name="login_check")
@@ -135,6 +155,9 @@ class DefaultController extends Controller
      */
     public function loginAction(Request $request)
     {
+        if( $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
+            return $this->redirect($this->generateUrl('home'));
+        }
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
         $session = $request->getSession();
 
@@ -159,7 +182,7 @@ class DefaultController extends Controller
             ? $this->container->get('form.csrf_provider')->generateCsrfToken('authenticate')
             : null;
 
-        return $this->render('NerminUserBundle:Default:index.html.twig', array(
+        return $this->render('NerminUserBundle:Default:login.html.twig', array(
             'last_username' => $lastUsername,
             'error' => $error,
             'csrf_token' => $csrfToken,

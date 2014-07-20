@@ -1,0 +1,24 @@
+{% extends '::base.html.twig' %}
+
+{% block title %}Korisnici{% endblock %}
+
+{% block content %}
+    <table class="table">
+        <tr>
+            <th>Uername</th>
+            <th>Email</th>
+            <th>Registered</th>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.createdAt|date('Y-m-d H:i:s') }}</td>
+        </tr>
+            {% else %}
+                <tr>
+                    <td colspan="3">Nema korisnika</td>
+                </tr>
+            {% endfor %}
+    </table>
+{% endblock %}
