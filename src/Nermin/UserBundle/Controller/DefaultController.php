@@ -25,15 +25,17 @@ class DefaultController extends Controller
      */
     public function indexAction()
     {
-       // return new Response('<body>Velkom</body>');
+        // return new Response('<body>Velkom</body>');
         return $this->render('NerminUserBundle:Default:index.html.twig');
     }
+
     /**
      * @Method("GET")
      * @Route("/users")
      * @Template()
      */
-    public function usersAction() {
+    public function usersAction()
+    {
         $users = $this->getDoctrine()->getRepository('NerminUserBundle:User')->findAll();
 
         return array(
@@ -47,7 +49,7 @@ class DefaultController extends Controller
      */
     public function registerAction(Request $request)
     {
-        if( $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('home'));
         }
         $form = $this->getRegisterForm();
@@ -66,7 +68,7 @@ class DefaultController extends Controller
             $user->setSalt($salt);
 
             // Encode user's password
-            $encoder = $this->get('security.encoder_factory')->getEncoder($user);
+            $encoder  = $this->get('security.encoder_factory')->getEncoder($user);
             $password = $encoder->encodePassword($data['password'], $salt);
             $user->setPassword($password);
 
@@ -86,7 +88,7 @@ class DefaultController extends Controller
         }
 
         return $this->render('NerminUserBundle:Default:registracija.html.twig', array(
-            'form'=>$form->createView(),
+            'form' => $form->createView(),
         ));
     }
 
@@ -95,7 +97,7 @@ class DefaultController extends Controller
 
         $builder = $this->createFormBuilder(null, array(
             'action' => $this->generateUrl('register'),
-            'attr' => array(
+            'attr'   => array(
                 'novalidate' => 'novalidate',
             ),
         ));
@@ -111,13 +113,17 @@ class DefaultController extends Controller
             ),
         ));
         $builder->add('password', 'repeated', array(
-            'type' => 'password',
+            'type'        => 'password',
             'constraints' => array(
                 new NotBlank(),
                 new Length(array('min' => 5)),
             ),
         ));
-        $builder->add('submit', 'submit');
+        $builder->add('submit', 'submit', array(
+            'attr' => array(
+                'class' => 'btn-primary',
+            ),
+        ));
 
         return $builder->getForm();
     }
@@ -128,9 +134,8 @@ class DefaultController extends Controller
      */
     public function uploadAction(Request $request)
     {
-
-
     }
+
     /**
      * @Method("POST")
      * @Route("/login_check", name="login_check")
@@ -151,11 +156,11 @@ class DefaultController extends Controller
 
     /**
      * @Method("GET")
-     * @Route("/login")
+     * @Route("/login", name="login")
      */
     public function loginAction(Request $request)
     {
-        if( $this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED') ){
+        if ($this->container->get('security.context')->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             return $this->redirect($this->generateUrl('home'));
         }
         /** @var $session \Symfony\Component\HttpFoundation\Session\Session */
@@ -184,8 +189,8 @@ class DefaultController extends Controller
 
         return $this->render('NerminUserBundle:Default:login.html.twig', array(
             'last_username' => $lastUsername,
-            'error' => $error,
-            'csrf_token' => $csrfToken,
+            'error'         => $error,
+            'csrf_token'    => $csrfToken,
         ));
     }
 }

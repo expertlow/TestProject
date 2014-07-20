@@ -40,6 +40,8 @@ security:
                 check_path: /login_check
                 csrf_parameter: _token
                 csrf_provider:  form.csrf_provider
+            remember_me:
+                key: %secret%
             logout:
                 path:       /logout
                 target:     /
