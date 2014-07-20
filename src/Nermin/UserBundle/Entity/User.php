@@ -65,6 +65,13 @@ class User implements UserInterface, \Serializable, EquatableInterface
      */
     private $roles;
 
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="avatar", type="string", length=255)
+     */
+    private $avatar;
+
 
     /**
      * Get id
@@ -246,5 +253,21 @@ class User implements UserInterface, \Serializable, EquatableInterface
     {
         /** @var $user $this */
         return $this->id === $user->getId();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * @param null|string $avatar
+     */
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
     }
 }
