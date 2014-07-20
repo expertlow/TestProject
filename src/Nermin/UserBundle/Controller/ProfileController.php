@@ -61,10 +61,15 @@ class ProfileController extends Controller
                 new Email(),
             ),
         ));
+        $avatar = null;
+        if ($user && $user->getAvatar()) {
+            $avatar = new File($this->container->getParameter('kernel.root_dir').'/../web'.$user->getAvatar());
+        }
         $builder->add('avatar', 'file', array(
             'constraints' => array(
                 new Image(),
             ),
+            'data'        => $avatar,
         ));
         $builder->add('submit', 'submit', array(
             'attr' => array(
